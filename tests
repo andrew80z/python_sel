@@ -1,0 +1,31 @@
+import unittest
+from selenium import webdriver
+import HtmlTestRunner
+
+
+class MyTest(unittest.TestCase):
+
+
+    def setUp(self):
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--start-maximized")
+        self.driver = webdriver.Chrome('chromedriver.exe', options=chrome_options)
+        self.driver.implicitly_wait(30)
+
+    def test_page(self):
+        # Test data
+        test_url = "http://enterprise.github.com/contact"
+        text_to_present = "some text"
+        text_to_absent = "Your sfull"
+        # Navigate to the application home page
+        self.driver.get(test_url)
+        # Input text
+        input_name = self.driver.find_element_by_xpath("//input[@id='contact_request_name']")
+        input_name.send_keys('test message')
+        # Verify text is present on page
+        self.assertTrue (text_to_present in self.driver.page_source)
+        # Verify text is not present on page
+        self.assertFalse(text_to_absent in self.driver.page_source)
+        self.driver.quit()
+if __name__ == '__main__':
+    unittest.main(testRunner=HtmlTestRunner.HTMLTestRunner(output='report'))
